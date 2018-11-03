@@ -15,17 +15,28 @@ PG_PREFIX=""
 
 # install postgresql
 if [[ "$DISTRO" == "redhat" ]]; then
-   # use software collections
-   PG_PREFIX="/opt/rh/rh-postgresql10/root/usr/bin/"
-   CONFIG="/var/opt/rh/rh-postgresql10/lib/pgsql/data/pg_hba.conf"
+    # this just covers CentOS for now
+    sudo yum -y install centos-release-scl
+    # on Red Hat
+    # use software collections
+    sudo yum -y install epel-release
+    sudo yum -y install rh-postgresql10
+    sudo tee /etc/profile.d/enable_pg10.sh >/dev/null << END_OF_PG10
+    #!/bin/bash
+    source scl_source enable rh-postgresql10
+END_OF_PG10
+    sudo chmod +x /etc/profile.d/enable_pg10.sh 
+    PG_PREFIX="/opt/rh/rh-postgresql10/root/usr/bin/"
+    CONFIG="/var/opt/rh/rh-postgresql10/lib/pgsql/data/pg_hba.conf"
 elif [[ "$DISTRO" == "ubuntu" ]]; then
-   sudo apt install -y postgresql postgresql-contrib
-   CONFIG="/etc/postgresql/10/main/pg_hba.conf"
+    sudo apt install -y postgresql postgresql-contrib postgresql-client
+    CONFIG="/etc/postgresql/10/main/pg_hba.conf"
 elif [[ "$DISTRO" == "archlinux" ]]; then
-   sudo pacman --noconfirm -Sy postgresql
-   CONFIG="/var/lib/postgres/data/pg_hba.conf"
+    sudo pacman --noconfirm -Sy postgresql
+    CONFIG="/var/lib/postgres/data/pg_hba.conf"
 elif [[ "$DISTRO" == "MacOS" ]]; then
-   CONFIG="/usr/local/var/postgres/pg_hba.conf"
+    brew install postgresql
+    CONFIG="/usr/local/var/postgres/pg_hba.conf"
 fi
 
 # ---

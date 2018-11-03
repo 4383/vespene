@@ -11,21 +11,16 @@ if [ "$DISTRO" == "redhat" ]; then
     # on Red Hat
     # sudo yum-config-manager --enable rhel-server-rhscl-7-rpms ?
     sudo yum -y install epel-release
-    sudo yum -y install gcc python36 python36-devel supervisor rh-postgresql10
+    sudo yum -y install gcc python36 python36-devel supervisor
     sudo python36 -m ensurepip
-    sudo tee /etc/profile.d/enable_pg10.sh >/dev/null << END_OF_PG10
-    #!/bin/bash
-    source scl_source enable rh-postgresql10
-END_OF_PG10
-    sudo chmod +x /etc/profile.d/enable_pg10.sh 
 elif [ "$DISTRO" == "ubuntu" ]; then
     sudo apt-add-repository universe
     sudo apt-get update
-    sudo apt-get install -y gcc libssl-dev postgresql-client python3 python3-pip python3-setuptools supervisor
+    sudo apt-get install -y gcc libssl-dev python3 python3-pip python3-setuptools supervisor
 elif [ "$DISTRO" == "archlinux" ]; then
-    sudo pacman --noconfirm -Sy python python-pip python-setuptools postgresql supervisor sudo
+    sudo pacman --noconfirm -Sy python python-pip python-setuptools  supervisor sudo
 elif [ "$DISTRO" == "MacOS" ]; then
-    brew install python@3 postgresql supervisor
+    brew install python@3 supervisor
 fi
 
 if [ "$DISTRO" != "MacOS" ]; then
